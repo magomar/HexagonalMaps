@@ -2,7 +2,9 @@ package hexmapdemo.gui;
 
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ * @author Mario Gómez Martínez <magomar@gmail.com>
+ */
 public class HexagonalMap extends JPanel {
     int width;
     int height;
@@ -36,7 +38,9 @@ public class HexagonalMap extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(width - 1 * hexHeight + hexRectWidth, height * hexRectHeight);
+        int panelWidth = width  * hexOffset + hexHeight;
+        int panelHeight = height * hexRadius * 2 + hexRadius + 1;
+        return new Dimension(panelWidth, panelHeight);
     }
 
     Polygon getHexagon(int column, int row) {
@@ -60,18 +64,16 @@ public class HexagonalMap extends JPanel {
 
     Point pixelToTile(int x, int y) {
         Point tile = new Point();
-        tile.x = x / hexOffset;
-        tile.y = tile.x % 2 == 0 ? (y - (hexHeight / 2)) / hexHeight : (y / hexHeight);
-        return tile;
+        int columm = x / hexOffset;
+        int row = tile.x % 2 == 0 ? (y - (hexRectHeight / 2)) / hexRectHeight : (y / hexRectHeight);
+        return new Point(x,y);
     }
 
     Point pixelToTileAccurate(int x, int y) {
         double hexRise = hexRadius / hexHeight;
-        int dy = (int) (hexHeight / 2);
-        // gradient = dy/dx
-        Point section = new Point((int) (x / hexOffset), (int) (y / hexHeight));
-        // Pixel within the section
-        Point pixelInSection = new Point((int) (x % hexOffset), (int) (y % hexHeight));
+        int dy = hexRectHeight / 2;
+        Point section = new Point(x / hexOffset, y / hexRectHeight);
+        Point pixelInSection = new Point(x % hexOffset, y % hexRectHeight);
 
         if ((section.x % 2) == 1) {
             //odd column
@@ -107,5 +109,10 @@ public class HexagonalMap extends JPanel {
             }
         }
         return section;
+    }
+    public boolean tileIsWithinBoard(Point coordinates) {
+        int column = coordinates.x;
+        int row = coordinates.y;
+        return (column >= 0 && column < width) && (row >= 0 && row < height);
     }
 }
