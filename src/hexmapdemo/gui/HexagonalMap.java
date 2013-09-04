@@ -2,18 +2,19 @@ package hexmapdemo.gui;
 
 import javax.swing.*;
 import java.awt.*;
+
 /**
  * @author Mario Gómez Martínez <magomar@gmail.com>
  */
 public class HexagonalMap extends JPanel {
-    int width;
-    int height;
-    int hexSide;
-    int hexHeight;
-    int hexRadius;
-    int hexOffset;
-    int hexRectWidth;
-    int hexRectHeight;
+    private int width;
+    private int height;
+    private int hexSide;
+    private int hexHeight;
+    private int hexRadius;
+    private int hexOffset;
+    private int hexRectWidth;
+    private int hexRectHeight;
 
     public HexagonalMap(int width, int height, int hexSide) {
         this.width = width;
@@ -31,19 +32,19 @@ public class HexagonalMap extends JPanel {
         super.paintComponent(g);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                g.drawPolygon(getHexagon(i, j));
+                g.drawPolygon(buildHexagon(i, j));
             }
         }
     }
 
     @Override
     public Dimension getPreferredSize() {
-        int panelWidth = width  * hexOffset + hexHeight;
+        int panelWidth = width * hexOffset + hexHeight;
         int panelHeight = height * hexRadius * 2 + hexRadius + 1;
         return new Dimension(panelWidth, panelHeight);
     }
 
-    Polygon getHexagon(int column, int row) {
+    Polygon buildHexagon(int column, int row) {
         Polygon hex = new Polygon();
         Point origin = tileToPixel(column, row);
         hex.addPoint(origin.x + hexHeight, origin.y);
@@ -63,13 +64,6 @@ public class HexagonalMap extends JPanel {
     }
 
     Point pixelToTile(int x, int y) {
-        Point tile = new Point();
-        int columm = x / hexOffset;
-        int row = tile.x % 2 == 0 ? (y - (hexRectHeight / 2)) / hexRectHeight : (y / hexRectHeight);
-        return new Point(x,y);
-    }
-
-    Point pixelToTileAccurate(int x, int y) {
         double hexRise = hexRadius / hexHeight;
         int dy = hexRectHeight / 2;
         Point section = new Point(x / hexOffset, y / hexRectHeight);
@@ -82,7 +76,7 @@ public class HexagonalMap extends JPanel {
                 section.x--;
                 section.y--;
             } else if (pixelInSection.x * hexRise + dy < pixelInSection.y) {
-                //Pixel is in the SE neighbout tile
+                //Pixel is in the SE neighbour tile
                 section.x--;
             } else {
                 //pixel is in our tile
@@ -110,6 +104,7 @@ public class HexagonalMap extends JPanel {
         }
         return section;
     }
+
     public boolean tileIsWithinBoard(Point coordinates) {
         int column = coordinates.x;
         int row = coordinates.y;
