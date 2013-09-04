@@ -7,14 +7,14 @@ import java.awt.*;
  * @author Mario Gómez Martínez <magomar@gmail.com>
  */
 public class HexagonalMap extends JPanel {
-    private int width;
-    private int height;
-    private int hexSide;
-    private int hexHeight;
-    private int hexRadius;
-    private int hexOffset;
-    private int hexRectWidth;
-    private int hexRectHeight;
+    private int width; // Number of columns
+    private int height; // Number of rows
+    private int hexSide; // Side of the hexagons (s)
+    private int hexHeight; // Height of the hexagons (h)
+    private int hexRadius; // Radius of the hexagons (r)
+    private int hexOffset;  // Side + Height of the hexagons (h + s)
+    private int hexRectWidth; // Width of the minimal rectangle containing an hexagon (b)
+    private int hexRectHeight; // Height of the minimal rectangle containing an hexagon (a)
 
     public HexagonalMap(int width, int height, int hexSide) {
         this.width = width;
@@ -56,10 +56,10 @@ public class HexagonalMap extends JPanel {
         return hex;
     }
 
-    Point tileToPixel(int x, int y) {
+    Point tileToPixel(int column, int row) {
         Point pixel = new Point();
-        pixel.x = hexOffset * x;
-        pixel.y = x % 2 == 0 ? (hexRectHeight * y) + (hexRadius) : (hexRectHeight * y);
+        pixel.x = hexOffset * column;
+        pixel.y = column % 2 == 0 ? (hexRectHeight * row) + (hexRadius) : (hexRectHeight * row);
         return pixel;
     }
 
