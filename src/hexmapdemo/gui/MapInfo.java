@@ -13,13 +13,13 @@ public class MapInfo extends JPanel {
     private JTextField rowField;
 
     public MapInfo() {
-        xField = new JTextField("     ");
+        xField = new JTextField("????");
         xField.setEditable(false);
-        yField = new JTextField("     ");
+        yField = new JTextField("????");
         yField.setEditable(false);
-        columnField = new JTextField("  ");
+        columnField = new JTextField("????");
         columnField.setEditable(false);
-        rowField = new JTextField("   ");
+        rowField = new JTextField("????");
         rowField.setEditable(false);
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -56,7 +56,12 @@ public class MapInfo extends JPanel {
     }
 
     public void setTileCoordinates(Point coordinates) {
+        if (coordinates != null) {
         columnField.setText(String.valueOf(coordinates.x));
         rowField.setText(String.valueOf(coordinates.y));
+        }  else {
+            columnField.setText(String.valueOf("????"));
+            rowField.setText(String.valueOf("????"));
+        }
     }
 }

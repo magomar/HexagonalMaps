@@ -19,11 +19,11 @@ public class HexagonalMapDemo1 extends JFrame {
 
     public HexagonalMapDemo1() {
         super("Hexagonal Map Demo");
+        info = new MapInfo();
         map = new HexagonalMap(MAP_WIDTH, MAP_HEIGHT, HEX_SIDE);
         map.addMouseMotionListener(new BoardMouseMotionListener());
         mainPanel = new JPanel();
         mainPanel.add(map);
-        info = new MapInfo();
         mainPanel.add(info);
         setContentPane(mainPanel);
     }
@@ -46,7 +46,7 @@ public class HexagonalMapDemo1 extends JFrame {
             Point tileCoordinates = map.pixelToTile(me.getX(), me.getY());
             if (map.tileIsWithinBoard(tileCoordinates)) {
                 info.setTileCoordinates(tileCoordinates);
-            }
+            } else info.setTileCoordinates(null);
         }
     }
 }
