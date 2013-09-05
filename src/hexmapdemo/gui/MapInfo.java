@@ -4,23 +4,22 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Mario Gómez Martínez <magomar@gmail.com>
- * Date: 3/09/13
- * Time: 15:46
+ * @author Mario Gómez Martínez <magomar@gmail.com>
  */
-public class TileInfo extends JPanel {
+public class MapInfo extends JPanel {
     private JTextField xField;
     private JTextField yField;
     private JTextField columnField;
     private JTextField rowField;
 
-    public TileInfo() {
-        xField = new JTextField("     ");
-        yField = new JTextField("     ");
-        columnField = new JTextField("  ");
+    public MapInfo() {
+        xField = new JTextField("????");
+        xField.setEditable(false);
+        yField = new JTextField("????");
+        yField.setEditable(false);
+        columnField = new JTextField("????");
         columnField.setEditable(false);
-        rowField = new JTextField("   ");
+        rowField = new JTextField("????");
         rowField.setEditable(false);
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -57,7 +56,12 @@ public class TileInfo extends JPanel {
     }
 
     public void setTileCoordinates(Point coordinates) {
+        if (coordinates != null) {
         columnField.setText(String.valueOf(coordinates.x));
         rowField.setText(String.valueOf(coordinates.y));
+        }  else {
+            columnField.setText(String.valueOf("????"));
+            rowField.setText(String.valueOf("????"));
+        }
     }
 }

@@ -12,19 +12,19 @@ public class HexagonalMapDemo1 extends JFrame {
     static final int HEX_SIDE = 25;
     static final int MAP_WIDTH = 10;
     static final int MAP_HEIGHT = 10;
-    private HexagonalMap mapPanel;
-    private TileInfo tileInfoPanel;
+    private HexagonalMap map;
+    private MapInfo info;
     private JPanel mainPanel;
 
 
     public HexagonalMapDemo1() {
         super("Hexagonal Map Demo");
-        mapPanel = new HexagonalMap(MAP_WIDTH, MAP_HEIGHT, HEX_SIDE);
-        mapPanel.addMouseMotionListener(new BoardMouseMotionListener());
+        info = new MapInfo();
+        map = new HexagonalMap(MAP_WIDTH, MAP_HEIGHT, HEX_SIDE);
+        map.addMouseMotionListener(new BoardMouseMotionListener());
         mainPanel = new JPanel();
-        mainPanel.add(mapPanel);
-        tileInfoPanel = new TileInfo();
-        mainPanel.add(tileInfoPanel);
+        mainPanel.add(map);
+        mainPanel.add(info);
         setContentPane(mainPanel);
     }
 
@@ -42,11 +42,11 @@ public class HexagonalMapDemo1 extends JFrame {
     private class BoardMouseMotionListener extends MouseMotionAdapter {
         @Override
         public void mouseMoved(MouseEvent me) {
-            tileInfoPanel.setMousePosition(me.getX(), me.getY());
-            Point tileCoordinates = mapPanel.pixelToTileAccurate(me.getX(),me.getY());
-            if (mapPanel.tileIsWithinBoard(tileCoordinates)) {
-                tileInfoPanel.setTileCoordinates(tileCoordinates);
-            }
+            info.setMousePosition(me.getX(), me.getY());
+            Point tileCoordinates = map.pixelToTile(me.getX(), me.getY());
+            if (map.tileIsWithinBoard(tileCoordinates)) {
+                info.setTileCoordinates(tileCoordinates);
+            } else info.setTileCoordinates(null);
         }
     }
 }

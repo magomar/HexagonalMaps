@@ -2,18 +2,19 @@ package hexmapdemo.gui;
 
 import javax.swing.*;
 import java.awt.*;
+
 /**
  * @author Mario Gómez Martínez <magomar@gmail.com>
  */
 public class HexagonalMap extends JPanel {
-    int width;
-    int height;
-    int hexSide;
-    int hexHeight;
-    int hexRadius;
-    int hexOffset;
-    int hexRectWidth;
-    int hexRectHeight;
+    private int width; // Number of columns
+    private int height; // Number of rows
+    private int hexSide; // Side of the hexagons (s)
+    private int hexHeight; // Height of the hexagons (h)
+    private int hexRadius; // Radius of the hexagons (r)
+    private int hexOffset;  // Height + Side of the hexagons (h + s)
+    private int hexRectWidth; // Width of the minimal rectangle containing an hexagon (b)
+    private int hexRectHeight; // Height of the minimal rectangle containing an hexagon (a)
 
     public HexagonalMap(int width, int height, int hexSide) {
         this.width = width;
@@ -21,7 +22,7 @@ public class HexagonalMap extends JPanel {
         this.hexSide = hexSide;
         hexRadius = (int) (hexSide * Math.cos(Math.PI / 6));
         hexHeight = (int) (hexSide * Math.sin(Math.PI / 6));
-        hexOffset = hexSide + hexHeight;
+        hexOffset = hexHeight + hexSide;
         hexRectWidth = 2 * hexHeight + hexSide;
         hexRectHeight = 2 * hexRadius;
     }
@@ -31,19 +32,19 @@ public class HexagonalMap extends JPanel {
         super.paintComponent(g);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                g.drawPolygon(getHexagon(i, j));
+                g.drawPolygon(buildHexagon(i, j));
             }
         }
     }
 
     @Override
     public Dimension getPreferredSize() {
-        int panelWidth = width  * hexOffset + hexHeight;
-        int panelHeight = height * hexRadius * 2 + hexRadius + 1;
+        int panelWidth = width * hexOffset + hexHeight;
+        int panelHeight = height * hexRectHeight + hexRadius + 1;
         return new Dimension(panelWidth, panelHeight);
     }
 
-    Polygon getHexagon(int column, int row) {
+    Polygon buildHexagon(int column, int row) {
         Polygon hex = new Polygon();
         Point origin = tileToPixel(column, row);
         hex.addPoint(origin.x + hexHeight, origin.y);
@@ -55,61 +56,37 @@ public class HexagonalMap extends JPanel {
         return hex;
     }
 
-    Point tileToPixel(int x, int y) {
+    Point tileToPixel(int column, int row) {
         Point pixel = new Point();
-        pixel.x = hexOffset * x;
-        pixel.y = x % 2 == 0 ? (hexRectHeight * y) + (hexRadius) : (hexRectHeight * y);
+        pixel.x = hexOffset * column;
+        if (Util.isOdd(column)) pixel.y = hexRectHeight * row;
+        else pixel.y = hexRectHeight * row + hexRadius;
         return pixel;
     }
 
     Point pixelToTile(int x, int y) {
-        Point tile = new Point();
-        int columm = x / hexOffset;
-        int row = tile.x % 2 == 0 ? (y - (hexRectHeight / 2)) / hexRectHeight : (y / hexRectHeight);
-        return new Point(x,y);
-    }
-
-    Point pixelToTileAccurate(int x, int y) {
-        double hexRise = hexRadius / hexHeight;
-        int dy = hexRectHeight / 2;
-        Point section = new Point(x / hexOffset, y / hexRectHeight);
-        Point pixelInSection = new Point(x % hexOffset, y % hexRectHeight);
-
-        if ((section.x % 2) == 1) {
-            //odd column
-            if ((-hexRise) * pixelInSection.x + dy > pixelInSection.y) {
-                //Pixel is in the NW neighbor tile
-                section.x--;
-                section.y--;
-            } else if (pixelInSection.x * hexRise + dy < pixelInSection.y) {
-                //Pixel is in the SE neighbout tile
-                section.x--;
+        double hexRise = (double) hexRadius / (double) hexHeight;
+        Point p = new Point(x / hexOffset, y / hexRectHeight);
+        Point r = new Point(x % hexOffset, y % hexRectHeight);
+        Direction direction;
+        if (Util.isOdd(p.x)) { //odd column
+            if (r.y < -hexRise * r.x + hexRadius) {
+                direction = Direction.NW;
+            } else if (r.y > hexRise * r.x + hexRadius) {
+                direction = Direction.SW;
             } else {
-                //pixel is in our tile
+                direction = Direction.C;
             }
-        } else {
-            //even column
-            if (pixelInSection.y < dy) {
-                //upper side
-                if ((hexRise * pixelInSection.x) > pixelInSection.y) {
-                    // Pixel is in the N neighbor tile
-                    section.y--;
-                } else {
-                    // Pixel is in the upper area of NW neighbor
-                    section.x--;
-                }
-            } else {
-                //lower side
-                if (((-hexRise) * pixelInSection.x + hexHeight) > pixelInSection.y) {
-                    // Pixel is in the lower area of the NW neighbor
-                    section.x--;
-                } else {
-                    // Pixel is in our tile
-                }
-            }
+        } else { //even column
+            if (r.y > hexRise * r.x && r.y < -hexRise * r.x + hexRectHeight) {
+                direction = Direction.NW;
+            } else if (r.y < hexRadius) {
+                direction = Direction.N;
+            } else direction = Direction.C;
         }
-        return section;
+        return new Point(direction.getNeighborCoordinates(p));
     }
+
     public boolean tileIsWithinBoard(Point coordinates) {
         int column = coordinates.x;
         int row = coordinates.y;
