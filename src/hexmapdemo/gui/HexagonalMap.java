@@ -9,22 +9,22 @@ import java.awt.*;
 public class HexagonalMap extends JPanel {
     private int width; // Number of columns
     private int height; // Number of rows
-    private int hexSide; // Side of the hexagons (s)
-    private int hexHeight; // Height of the hexagons (h)
-    private int hexRadius; // Radius of the hexagons (r)
-    private int hexOffset;  // Height + Side of the hexagons (h + s)
-    private int hexRectWidth; // Width of the minimal rectangle containing an hexagon (b)
-    private int hexRectHeight; // Height of the minimal rectangle containing an hexagon (a)
+    private int hexSide; // Side of the hexagon
+    private int hexOffset; // Distance from left horizontal vertex to vertical axis
+    private int hexApotheme; // Apotheme of the hexagon = radius of inscribed circumference
+    private int hexRectWidth; // Width of the circumscribed rectangle
+    private int hexRectHeight; // Height of the circumscribed rectangle
+    private int hexGridWidth;  // hexOffset + hexSide (b + s)
 
     public HexagonalMap(int width, int height, int hexSide) {
         this.width = width;
         this.height = height;
         this.hexSide = hexSide;
-        hexRadius = (int) (hexSide * Math.cos(Math.PI / 6));
-        hexHeight = (int) (hexSide * Math.sin(Math.PI / 6));
-        hexOffset = hexHeight + hexSide;
-        hexRectWidth = 2 * hexHeight + hexSide;
-        hexRectHeight = 2 * hexRadius;
+        hexApotheme = (int) (hexSide * Math.cos(Math.PI / 6));
+        hexOffset = (int) (hexSide * Math.sin(Math.PI / 6));
+        hexGridWidth = hexOffset + hexSide;
+        hexRectWidth = 2 * hexOffset + hexSide;
+        hexRectHeight = 2 * hexApotheme;
     }
 
     @Override
@@ -39,40 +39,40 @@ public class HexagonalMap extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        int panelWidth = width * hexOffset + hexHeight;
-        int panelHeight = height * hexRectHeight + hexRadius + 1;
+        int panelWidth = width * hexGridWidth + hexOffset;
+        int panelHeight = height * hexRectHeight + hexApotheme + 1;
         return new Dimension(panelWidth, panelHeight);
     }
 
     Polygon buildHexagon(int column, int row) {
         Polygon hex = new Polygon();
         Point origin = tileToPixel(column, row);
-        hex.addPoint(origin.x + hexHeight, origin.y);
         hex.addPoint(origin.x + hexOffset, origin.y);
-        hex.addPoint(origin.x + hexRectWidth, origin.y + hexRadius);
+        hex.addPoint(origin.x + hexGridWidth, origin.y);
+        hex.addPoint(origin.x + hexRectWidth, origin.y + hexApotheme);
+        hex.addPoint(origin.x + hexGridWidth, origin.y + hexRectHeight);
         hex.addPoint(origin.x + hexOffset, origin.y + hexRectHeight);
-        hex.addPoint(origin.x + hexHeight, origin.y + hexRectHeight);
-        hex.addPoint(origin.x, origin.y + hexRadius);
+        hex.addPoint(origin.x, origin.y + hexApotheme);
         return hex;
     }
 
     Point tileToPixel(int column, int row) {
         Point pixel = new Point();
-        pixel.x = hexOffset * column;
+        pixel.x = hexGridWidth * column;
         if (Util.isOdd(column)) pixel.y = hexRectHeight * row;
-        else pixel.y = hexRectHeight * row + hexRadius;
+        else pixel.y = hexRectHeight * row + hexApotheme;
         return pixel;
     }
 
     Point pixelToTile(int x, int y) {
-        double hexRise = (double) hexRadius / (double) hexHeight;
-        Point p = new Point(x / hexOffset, y / hexRectHeight);
-        Point r = new Point(x % hexOffset, y % hexRectHeight);
+        double hexRise = (double) hexApotheme / (double) hexOffset;
+        Point p = new Point(x / hexGridWidth, y / hexRectHeight);
+        Point r = new Point(x % hexGridWidth, y % hexRectHeight);
         Direction direction;
         if (Util.isOdd(p.x)) { //odd column
-            if (r.y < -hexRise * r.x + hexRadius) {
+            if (r.y < -hexRise * r.x + hexApotheme) {
                 direction = Direction.NW;
-            } else if (r.y > hexRise * r.x + hexRadius) {
+            } else if (r.y > hexRise * r.x + hexApotheme) {
                 direction = Direction.SW;
             } else {
                 direction = Direction.C;
@@ -80,7 +80,7 @@ public class HexagonalMap extends JPanel {
         } else { //even column
             if (r.y > hexRise * r.x && r.y < -hexRise * r.x + hexRectHeight) {
                 direction = Direction.NW;
-            } else if (r.y < hexRadius) {
+            } else if (r.y < hexApotheme) {
                 direction = Direction.N;
             } else direction = Direction.C;
         }
