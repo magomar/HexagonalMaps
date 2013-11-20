@@ -1,4 +1,6 @@
-package hexmapdemo.gui;
+package hexagonalmaps.scenario;
+
+import hexagonalmaps.Util;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +66,7 @@ public class HexagonalMap extends JPanel {
         return pixel;
     }
 
-    Point pixelToTile(int x, int y) {
+    public Point pixelToTile(int x, int y) {
         double hexRise = (double) hexApotheme / (double) hexOffset;
         Point p = new Point(x / hexGridWidth, y / hexRectHeight);
         Point r = new Point(x % hexGridWidth, y % hexRectHeight);

@@ -1,4 +1,4 @@
-package hexmapdemo.gui;
+package hexagonalmaps;
 
 /**
  * Author: Mario Gómez Martínez <magomar@gmail.com>
