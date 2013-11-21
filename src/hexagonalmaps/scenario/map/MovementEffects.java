@@ -1,4 +1,4 @@
-package hexagonalmaps.scenario;
+package hexagonalmaps.scenario.map;
 
 /**
  * @author Mario Gómez Martínez <magomar@gmail.com>

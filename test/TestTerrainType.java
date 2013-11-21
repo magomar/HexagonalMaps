@@ -1,14 +1,16 @@
-import hexagonalmaps.scenario.TerrainType;
+import hexagonalmaps.scenario.map.TerrainType;
 import org.junit.Test;
 
+import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * @author Mario Gómez Martínez <magomar@gmail.com>
  */
 public class TestTerrainType {
-    @org.junit.Test
+    @Test
     public void testEnumManipulation() throws Exception {
         System.out.println("*** Testing enum manipulation ***\n");
         System.out.println("Listing all enum values...");
@@ -72,4 +74,20 @@ public class TestTerrainType {
         assert terrainSet.contains(TerrainType.FOREST);
         assert !terrainSet.contains(TerrainType.LIGHT_WOODS);
     }
+
+    @Test
+    public void testEnumMap() throws Exception {
+        System.out.println("\n*** Testing enum maps manipulation ***\n");
+        System.out.println("Creating enum maps...");
+        Map<TerrainType, String> enumMap = new EnumMap<TerrainType, String>(TerrainType.class);
+        Set<TerrainType> woods = EnumSet.of(TerrainType.FOREST, TerrainType.LIGHT_WOODS);
+        for (TerrainType terrainType : woods) {
+            enumMap.put(terrainType, terrainType.name().toLowerCase() + ".png");
+        }
+        System.out.println(enumMap);
+        for (Map.Entry<TerrainType, String> entry : enumMap.entrySet()) {
+            assert entry.getValue().equals(entry.getKey().name().toLowerCase() + ".png");
+        }
+    }
+
 }

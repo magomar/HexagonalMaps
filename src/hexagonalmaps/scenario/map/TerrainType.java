@@ -1,6 +1,9 @@
-package hexagonalmaps.scenario;
+package hexagonalmaps.scenario.map;
 
-public enum TerrainType implements MovementEffects, GraphicsProvider{
+import hexagonalmaps.scenario.GraphicsProvider;
+import hexagonalmaps.scenario.map.MovementEffects;
+
+public enum TerrainType implements MovementEffects, GraphicsProvider {
     OPEN(0),
     SAND(1),
     HILLS(2),
@@ -36,7 +39,7 @@ public enum TerrainType implements MovementEffects, GraphicsProvider{
     /**
      * Obtains the image index in the image file, given a bitmask representing directions.<p>
      * There are 6 standard directions, so 2^6=64 combinations are possible. In addition, there is a special direction,
-     * {@link Direction#C} that excludes any of the other directions. That makes 65 values to represent. However, the
+     * {@link hexagonalmaps.scenario.map.Direction#C} that excludes any of the other directions. That makes 65 values to represent. However, the
      * absence of any direction is not represented (it is assumed bitMask is never 0), so we actually have 64 values,
      * numbered from 1 to 64.
      *
