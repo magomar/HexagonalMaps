@@ -8,17 +8,17 @@
 ## Intellij IDEA folders and files 
 ##################################
 
-/out/
-/.idea/workspace.xml
-/.idea/tasks.xml
+out/
+.idea/workspace.xml
+.idea/tasks.xml
 
 ###################
 ## Netbeans folders 
 ###################
 
-/build/
-/dist/
-/nbproject/private/
+build/
+dist/
+nbproject/private/
 
 #################
 ## Eclipse
@@ -57,7 +57,7 @@ local.properties
 
 # Windows image file caches
 Thumbs.db
-ehthumbs.db
+thumbs.db
 
 # Folder config file
 Desktop.ini
