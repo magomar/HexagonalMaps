@@ -3,12 +3,9 @@ package hexagonalmaps.gui;
 import hexagonalmaps.scenario.map.*;
 import hexagonalmaps.util.Util;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -28,30 +25,12 @@ public class HexagonalMap extends JPanel {
     private Board board;
     private Map<TerrainType, ImageProvider> terrainImageProvider;
 
-
-    /**
-     * Create new hexagonal map given a board
-     *
-     * @param board
-     */
     public HexagonalMap(Board board) {
-        this.board = board;
-        this.width = board.getWidth();
-        this.height = board.getHeight();
-
         terrainImageProvider = new EnumMap<>(TerrainType.class);
         for (TerrainType tt : TerrainType.values()) {
             terrainImageProvider.put(tt, tt.createImageProvider());
         }
-
-        ImageProvider someImageProvider = terrainImageProvider.get(TerrainType.FOREST);
-        BufferedImage someTerrainImage = someImageProvider.getImage(0);
-        hexRectWidth = someTerrainImage.getWidth();
-        hexRectHeight = someTerrainImage.getHeight();
-        hexApotheme = hexRectHeight / 2;
-        hexSide = (int) ((double) hexApotheme / Math.cos(Math.PI / 6));
-        hexOffset = (int) (hexSide * Math.sin(Math.PI / 6));
-        hexGridWidth = hexOffset + hexSide;
+        setBoard(board);
     }
 
     @Override
@@ -73,7 +52,6 @@ public class HexagonalMap extends JPanel {
         }
         g2.dispose();
         ((Graphics2D) g).drawImage(globalImage, 0, 0, null);
-//        repaint();
     }
 
     void paintTile(Graphics2D g2, int column, int row, Tile tile) {
@@ -149,5 +127,22 @@ public class HexagonalMap extends JPanel {
         int column = coordinates.x;
         int row = coordinates.y;
         return (column >= 0 && column < width) && (row >= 0 && row < height);
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+        this.width = board.getWidth();
+        this.height = board.getHeight();
+
+        ImageProvider someImageProvider = terrainImageProvider.get(TerrainType.FOREST);
+        BufferedImage someTerrainImage = someImageProvider.getImage(0);
+        hexRectWidth = someTerrainImage.getWidth();
+        hexRectHeight = someTerrainImage.getHeight();
+        hexApotheme = hexRectHeight / 2;
+        hexSide = (int) ((double) hexApotheme / Math.cos(Math.PI / 6));
+        hexOffset = (int) (hexSide * Math.sin(Math.PI / 6));
+        hexGridWidth = hexOffset + hexSide;
+        globalImage = null;
+        repaint();
     }
 }
