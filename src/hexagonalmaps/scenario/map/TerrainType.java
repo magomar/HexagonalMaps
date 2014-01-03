@@ -1,9 +1,11 @@
 package hexagonalmaps.scenario.map;
 
-import hexagonalmaps.scenario.GraphicsProvider;
-import hexagonalmaps.scenario.map.MovementEffects;
+import hexagonalmaps.gui.ImageProvider;
+import hexagonalmaps.gui.ImageProviderFactory;
+import hexagonalmaps.gui.MatrixImageProvider;
+import hexagonalmaps.util.ResourcePath;
 
-public enum TerrainType implements MovementEffects, GraphicsProvider {
+public enum TerrainType implements MovementEffects, ImageProviderFactory {
     OPEN(0),
     SAND(1),
     HILLS(2),
@@ -22,18 +24,15 @@ public enum TerrainType implements MovementEffects, GraphicsProvider {
     ROAD(0);
 
     private final int movementCost;
-
+    private final String filename;
 
     private TerrainType(final int movementCost) {
         this.movementCost = movementCost;
+        filename = "m_terrain_" + name().toLowerCase() + ".png";
     }
 
     public int getMovementCost() {
         return movementCost;
-    }
-
-    public String getFilename() {
-        return "m_terrain_" + name().toLowerCase() + ".png";
     }
 
     /**
@@ -50,4 +49,13 @@ public enum TerrainType implements MovementEffects, GraphicsProvider {
         return bitMask - 1;
     }
 
+    @Override
+    public String getFilename() {
+        return filename;
+    }
+
+    @Override
+    public ImageProvider createImageProvider() {
+        return new MatrixImageProvider("", getFilename(), 8, 8, 408, 352);
+    }
 }
