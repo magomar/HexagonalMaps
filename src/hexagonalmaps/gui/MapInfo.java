@@ -1,4 +1,4 @@
-package hexagonalmaps.scenario.map;
+package hexagonalmaps.gui;
 
 import javax.swing.*;
 import java.awt.*;
