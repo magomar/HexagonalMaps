@@ -30,7 +30,18 @@ public class HexagonalMap extends JPanel {
         for (TerrainType tt : TerrainType.values()) {
             terrainImageProvider.put(tt, tt.createImageProvider());
         }
-        setBoard(board);
+        this.board = board;
+        this.width = board.getWidth();
+        this.height = board.getHeight();
+        // load some graphics to obtain the measures of the hexagonal tiles
+        ImageProvider someImageProvider = terrainImageProvider.get(TerrainType.FOREST);
+        BufferedImage someTerrainImage = someImageProvider.getImage(0);
+        hexRectWidth = someTerrainImage.getWidth();
+        hexRectHeight = someTerrainImage.getHeight();
+        hexApotheme = hexRectHeight / 2;
+        hexSide = (int) ((double) hexApotheme / Math.cos(Math.PI / 6));
+        hexOffset = (int) (hexSide * Math.sin(Math.PI / 6));
+        hexGridWidth = hexOffset + hexSide;
     }
 
     @Override
@@ -52,6 +63,7 @@ public class HexagonalMap extends JPanel {
         }
         g2.dispose();
         ((Graphics2D) g).drawImage(globalImage, 0, 0, null);
+        g.dispose();
     }
 
     void paintTile(Graphics2D g2, int column, int row, Tile tile) {
@@ -129,19 +141,8 @@ public class HexagonalMap extends JPanel {
         return (column >= 0 && column < width) && (row >= 0 && row < height);
     }
 
-    public void setBoard(Board board) {
+    public void update(Board board) {
         this.board = board;
-        this.width = board.getWidth();
-        this.height = board.getHeight();
-
-        ImageProvider someImageProvider = terrainImageProvider.get(TerrainType.FOREST);
-        BufferedImage someTerrainImage = someImageProvider.getImage(0);
-        hexRectWidth = someTerrainImage.getWidth();
-        hexRectHeight = someTerrainImage.getHeight();
-        hexApotheme = hexRectHeight / 2;
-        hexSide = (int) ((double) hexApotheme / Math.cos(Math.PI / 6));
-        hexOffset = (int) (hexSide * Math.sin(Math.PI / 6));
-        hexGridWidth = hexOffset + hexSide;
         globalImage = null;
         repaint();
     }

@@ -22,7 +22,7 @@ public class BoardToolBar extends JToolBar {
             public void actionPerformed(ActionEvent e) {
                 int selectedIndex = terrainTypeComboBox.getSelectedIndex();
                 Board newBoard = Board.createRandomMap(map.getWidth(), map.getHeight(), terrainTypeComboBox.getItemAt(selectedIndex));
-                map.setBoard(newBoard);
+                map.update(newBoard);
             }
         });
         add(terrainTypeComboBox);
