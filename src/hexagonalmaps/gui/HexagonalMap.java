@@ -57,7 +57,7 @@ public class HexagonalMap extends JPanel {
         for (int i = 0; i < width; i++) {
             Tile[] tileColumn = tiles[i];
             for (int j = 0; j < height; j++) {
-                g.drawPolygon(buildHexagon(i,j));
+//                g.drawPolygon(buildHexagon(i,j));
                 paintTile(g2, i, j, tileColumn[j]);
             }
         }

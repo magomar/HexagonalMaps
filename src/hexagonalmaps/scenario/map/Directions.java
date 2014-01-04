@@ -1,6 +1,7 @@
 package hexagonalmaps.scenario.map;
 
 import java.awt.*;
+import java.util.EnumSet;
 import java.util.Set;
 
 /**
@@ -115,9 +116,10 @@ public enum Directions {
     public static Directions getDirections(int bitmask) {
         return ALL_COMBINED_DIRECTIONS[bitmask - 1];
     }
-//    public boolean containsSome(Set<Direction> directions) {
-//        Set<Direction> result = EnumSet.copyOf(directions);
-//        result.retainAll(this.directions);
-//        return !result.isEmpty();
-//    }
+
+    public boolean containsSome(Set<Direction> directions) {
+        Set<Direction> result = EnumSet.copyOf(directions);
+        result.retainAll(this.directions);
+        return !result.isEmpty();
+    }
 }
