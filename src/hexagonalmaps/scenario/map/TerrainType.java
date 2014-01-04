@@ -40,7 +40,7 @@ public enum TerrainType implements MovementEffects, ImageProviderFactory {
      * There are 6 standard directions, so 2^6=64 combinations are possible. In addition, there is a special direction,
      * {@link hexagonalmaps.scenario.map.Direction#C} that excludes any of the other directions. That makes 65 values to represent. However, the
      * absence of any direction is not represented (it is assumed bitMask is never 0), so we actually have 64 values,
-     * numbered from 1 to 64.
+     * and bitmasks in the range 1 to 65.
      *
      * @param bitMask
      * @return
