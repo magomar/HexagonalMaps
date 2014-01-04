@@ -9,13 +9,9 @@ import java.util.*;
  */
 public class Tile {
     private java.util.Map<TerrainType, Directions> terrain;
-//    private int column;
-//    private int row;
 
     private Tile() {
         this.terrain = new EnumMap<>(TerrainType.class);
-//        this.column = column;
-//        this.row = row;
     }
 
     public Map<TerrainType, Directions> getTerrain() {
